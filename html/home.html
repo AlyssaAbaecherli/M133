@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>BBZW Dorfladen</title>
+    </head>
+    
+    <body>
+       <script>
+           function loadJSON(file,callback) {   
+                var xobj = new XMLHttpRequest();
+                xobj.overrideMimeType('application/json');
+                xobj.open('GET', file, true); 
+                xobj.onreadystatechange = function() {
+                    if (xobj.readyState == 4 && xobj.status == '200') {
+                    // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+                    callback(xobj.responseText);
+                    }
+                };
+                xobj.send(null);  
+            }
+
+            loadJSON('./produkte/products.json', function(text){
+                var data = JSON.parse(text);
+                var gesamtpreis = 0;
+                document.documentElement.innerHTML= "<h1>BBZW Dorfladen</h1>";
+                document.documentElement.innerHTML= document.documentElement.innerHTML + "<a>"+gesamtpreis+" CHF</a>";
+                
+                data.forEach(element => document.documentElement.innerHTML= document.documentElement.innerHTML + "<div id='product'><h3>" + element.productName +"</h3><a href='products.html?productName="+element.productName+"&description="+element.description+"&imageName="+element.imageName+"'><img src=produkte/" + element.imageName + "></img></a><div style='color: red; text-decoration:line-through;'>" + element.normalPrice+"</div><div>" + element.specialOffer+"</div></div><div>Hinzufügen</div><br>");
+                
+            });
+
+        </script>
+    </body>
+
+</html>
