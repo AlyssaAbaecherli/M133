@@ -9,6 +9,53 @@
     
     <body>
        <script>
+           var totalprice = 0;
+           var cart = [];
+           /*{
+                id: null,
+                item: "",
+                price: 0.00,
+                qty: 0
+            };*/
+
+function addElementToCart(id, element){
+    if (id == element.id) { 
+        var qty = 1; 
+        var cartElement = {element, qty};
+        cart.push(cartElement);
+        console.log(cartElement);
+        //console.log(element.id,element.productName, element.specialOffer)
+    }
+}
+
+function addToCart(id){
+    loadJSON('./produkte/products.json', function(text){
+        var data = JSON.parse(text);
+        data.forEach(element => addElementToCart(id,element));
+    });
+}
+
+/*function compareToCart(id, cartElement){
+    if (id == cartElement.element.id){
+        
+        //cart.qty = cart.qty+1;
+    }
+    else{
+        addToCart(id);
+    }
+}
+
+function compare(id){
+    console.log(cart.length);
+    if(cart.length >= 1){
+    cart.forEach(cartElement => compareToCart(id, cartElement));
+    }
+    else{
+        addToCart(id);
+    }
+}
+*/
+
            function loadJSON(file,callback) {   
                 var xobj = new XMLHttpRequest();
                 xobj.overrideMimeType('application/json');
@@ -24,13 +71,34 @@
 
             loadJSON('./produkte/products.json', function(text){
                 var data = JSON.parse(text);
-                var gesamtpreis = 0;
                 document.documentElement.innerHTML= "<h1>BBZW Dorfladen</h1>";
-                document.documentElement.innerHTML= document.documentElement.innerHTML + "<a>"+gesamtpreis+" CHF</a>";
+                document.documentElement.innerHTML= document.documentElement.innerHTML + "<a href='warenkorb.html?cart="+cart+"'><span id='totalprice'>"+totalprice+"<span> CHF</a>";
                 
-                data.forEach(element => document.documentElement.innerHTML= document.documentElement.innerHTML + "<div id='product'><h3>" + element.productName +"</h3><a href='products.html?productName="+element.productName+"&description="+element.description+"&imageName="+element.imageName+"'><img src=produkte/" + element.imageName + "></img></a><div style='color: red; text-decoration:line-through;'>" + element.normalPrice+"</div><div>" + element.specialOffer+"</div></div><div>Hinzufügen</div><br>");
-                
+                data.forEach(element => document.documentElement.innerHTML= document.documentElement.innerHTML + "<div id='product'><h3>" + element.productName +"</h3><a href='products.html?productName="+element.productName+"&description="+element.description+"&imageName="+element.imageName+"'><img src=produkte/" + element.imageName + "></img></a><div style='color: red; text-decoration:line-through;'>" + element.normalPrice+"</div><div>" + element.specialOffer+"</div><button onclick='addToCart("+ element.id+")'>Hinzufügen</button></div><br>");        
             });
+
+
+
+            /*
+                var total = parseInt( sessionStorage.getItem( "total" ) ); 
+                var quantity = 2; 
+                var updatedTotal = total * quantity; 
+                sessionStorage.setItem( "total", updatedTotal ); // '240', a string
+
+                console.log( updatedTotal ); // '120', a string
+*/
+
+
+                var jsonStr = JSON.stringify( cart );
+                sessionStorage.setItem( "cart", jsonStr );
+                // now the cart is {"item":"Product 1","price":35.50,"qty":2}
+                var cartValue = sessionStorage.getItem( "cart" );
+                var cartObj = JSON.parse( cartValue );
+                // original object
+
+                //zum löschen: sessionStorage.clear()
+                
+               // console.log(cartObj);
 
         </script>
     </body>
